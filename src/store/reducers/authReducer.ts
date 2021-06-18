@@ -16,7 +16,7 @@ interface UserAction {
 
 const initialState: UserState = {
     userName: '',
-    isAuth: true,
+    isAuth: false,
     loading: false,
     error: null
 };

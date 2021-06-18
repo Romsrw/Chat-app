@@ -1,3 +1,4 @@
+import Navbar from "./Navbar";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import Message from "./Message";
@@ -35,6 +36,8 @@ const Chat = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <Box alignItems="center" display="flex" flexDirection="column" flex={1}>
       <Paper className={classes.chat}>
         <Message />
@@ -61,6 +64,8 @@ const Chat = () => {
         </Button>
       </Box>
     </Box>
+    </>
+    
   );
 };
 
