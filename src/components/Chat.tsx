@@ -5,13 +5,28 @@ import Message from "./Message";
 import { sendMessage } from "../store/actions/chatActions";
 import { Box, Button, TextField, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Footer from "./Footer";
 
 const useStyles = makeStyles((theme) => ({
+  main: {
+    margin: theme.spacing(1),
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    flex: 1
+  },
   chat: {
     flex: 1,
     minWidth: theme.spacing(100),
-
-  }
+  },
+  inputMessage: {
+    margin: theme.spacing(2),
+    minWidth: 800,
+    display: "flex",
+    justifyContent: "flex-end",
+    borderRadius: theme.spacing(2),
+    backgroundColor: 'white'
+  },
 }));
 
 const Chat = () => {
@@ -37,35 +52,35 @@ const Chat = () => {
 
   return (
     <>
-    <Navbar />
-    <Box alignItems="center" display="flex" flexDirection="column" flex={1}>
-      <Paper className={classes.chat}>
-        <Message />
-      </Paper>
-      <Box style={{ minWidth: 800, display: "flex", justifyContent: "flex-end" }}>
-        <TextField
-          id="outlined-basic"
-          label="Введите сообщение"
-          variant="outlined"
-          size="small"
-          value={textMessage}
-          onChange={handleChangeInput}
-          onKeyDown={handleKeyPress}
-          fullWidth
-        />
-        <Button
-          size="small"
-          variant="contained"
-          color="secondary"
-          onClick={handleSendMessage}
-          disabled={!textMessage}
-        >
-          Отправить
-        </Button>
+      <Navbar />
+      <Box className={classes.main}>
+        <Paper className={classes.chat}>
+          <Message />
+        </Paper>
+        <Box className={classes.inputMessage}>
+          <TextField
+            id="outlined-basic"
+            label="Введите сообщение"
+            variant="outlined"
+            size="small"
+            value={textMessage}
+            onChange={handleChangeInput}
+            onKeyDown={handleKeyPress}
+            fullWidth
+          />
+          <Button
+            size="small"
+            variant="contained"
+            color="secondary"
+            onClick={handleSendMessage}
+            disabled={!textMessage}
+          >
+            Отправить
+          </Button>
+        </Box>
       </Box>
-    </Box>
+      <Footer />
     </>
-    
   );
 };
 

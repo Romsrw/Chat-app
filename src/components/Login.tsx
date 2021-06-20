@@ -9,10 +9,12 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { IRootState } from "../store/store";
 import { useHistory } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { auth } from "../firebase";
+import { loginAction } from "../store/actions/authActions";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -44,11 +46,10 @@ const Login = () => {
   const classes = useStyles();
 
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const { isAuth } = useSelector((state: IRootState) => state.auth);
-
   const [showPassword, setShowPassword] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("Email не может быть пустым");
@@ -107,6 +108,20 @@ const Login = () => {
     }
   }, [emailError, passwordError]);
 
+  const singIn = (e: any) => {
+    e.preventDefault();
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(dispatch(loginAction))
+      .catch(err => {
+        console.log(err)
+      });
+  };
+  const createUser = (e: any) => {
+    e.preventDefault();
+    auth.createUserWithEmailAndPassword(email, password);
+  };
+
   return (
     <Grid container className={classes.wrapper}>
       <Paper elevation={3} className={classes.formWrapper}>
@@ -115,7 +130,7 @@ const Login = () => {
         </Typography>
         <form className={classes.form} noValidate autoComplete="off">
           {emailDirty && emailError && (
-            <div style={{ color: "red" }}>{emailError}</div>
+            <span style={{ color: "red" }}>{emailError}</span>
           )}
           <TextField
             className={classes.input}
@@ -129,7 +144,7 @@ const Login = () => {
             onBlur={(e) => blurHandler(e)}
           />
           {passwordDirty && passwordError && (
-            <div style={{ color: "red" }}>{passwordError}</div>
+            <span style={{ color: "red" }}>{passwordError}</span>
           )}
           <TextField
             className={classes.input}
@@ -163,9 +178,11 @@ const Login = () => {
             variant="contained"
             color="primary"
             disabled={!formValid}
+            onClick={singIn}
           >
             Войти
           </Button>
+          <Button onClick={createUser}>Регистрация</Button>
         </form>
       </Paper>
     </Grid>
