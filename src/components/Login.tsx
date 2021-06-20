@@ -42,15 +42,70 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
   const classes = useStyles();
+
   const history = useHistory();
+
   const { isAuth } = useSelector((state: IRootState) => state.auth);
+
   const [showPassword, setShowPassword] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("Email не может быть пустым");
+  const [passwordError, setPasswordError] = useState(
+    "Пароль не может быть пустым"
+  );
+  const [emailDirty, setEmailDirty] = useState(false);
+  const [passwordDirty, setPasswordDirty] = useState(false);
+  const [formValid, setFormValid] = useState(false);
+
+  const blurHandler = (e: any) => {
+    switch (e.target.name) {
+      case "email":
+        setEmailDirty(true);
+        break;
+      case "password":
+        setPasswordDirty(true);
+        break;
+    }
+  };
+
+  const emailHandler = (e: any) => {
+    setEmail(e.target.value);
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!re.test(String(e.target.value).toLowerCase())) {
+      setEmailError("Некорректный email");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const passwordHandler = (e: any) => {
+    setPassword(e.target.value);
+    if (e.target.value.length < 3 || e.target.value.length > 15) {
+      setPasswordError("Пароль должен быть длинее 3 и меньше 15");
+      if (!e.target.value) {
+        setPasswordError("Пароль не может быть пустым");
+      }
+    } else {
+      setPasswordError("");
+    }
+  };
 
   useEffect(() => {
     if (isAuth) {
       history.push("/chat");
     }
   }, [history, isAuth]);
+
+  useEffect(() => {
+    if (emailError || passwordError) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
+  }, [emailError, passwordError]);
 
   return (
     <Grid container className={classes.wrapper}>
@@ -59,19 +114,33 @@ const Login = () => {
           Вход
         </Typography>
         <form className={classes.form} noValidate autoComplete="off">
+          {emailDirty && emailError && (
+            <div style={{ color: "red" }}>{emailError}</div>
+          )}
           <TextField
             className={classes.input}
+            name="email"
             id="outlined-basic"
             label="Введите email"
             variant="outlined"
             size="small"
+            value={email}
+            onChange={emailHandler}
+            onBlur={(e) => blurHandler(e)}
           />
+          {passwordDirty && passwordError && (
+            <div style={{ color: "red" }}>{passwordError}</div>
+          )}
           <TextField
             className={classes.input}
+            name="password"
             id="outlined-basic"
             label="Введите пароль"
             variant="outlined"
             size="small"
+            value={password}
+            onChange={passwordHandler}
+            onBlur={(e) => blurHandler(e)}
             type={showPassword ? "text" : "password"}
             InputProps={{
               endAdornment: (
@@ -93,6 +162,7 @@ const Login = () => {
             size="small"
             variant="contained"
             color="primary"
+            disabled={!formValid}
           >
             Войти
           </Button>
