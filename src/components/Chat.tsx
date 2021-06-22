@@ -1,11 +1,11 @@
 import Navbar from "./Navbar";
+import Message from "./Message";
+import Footer from "./Footer";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import Message from "./Message";
 import { sendMessage } from "../store/actions/chatActions";
 import { Box, Button, TextField, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Footer from "./Footer";
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -67,6 +67,7 @@ const Chat = () => {
             onChange={handleChangeInput}
             onKeyDown={handleKeyPress}
             fullWidth
+            autoComplete="off"
           />
           <Button
             size="small"

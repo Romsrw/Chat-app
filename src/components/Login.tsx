@@ -1,3 +1,4 @@
+import Loader from "./Loader";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -15,7 +16,6 @@ import { useHistory } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { auth } from "../firebase";
 import { loginAction } from "../store/actions/authActions";
-import Loader from "./Loader";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {

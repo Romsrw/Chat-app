@@ -21,7 +21,7 @@ export const logoutAction = () => (dispatch: any) => {
     dispatch({ type: USER_ACTIONS.LOADING, payload: true })
     auth
         .signOut()
-        .then(() => {
+        .then(() => { 
             dispatch({ type: USER_ACTIONS.LOGOUT })
         })
         .catch((error) => {
