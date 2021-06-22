@@ -15,6 +15,7 @@ import { useHistory } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { auth } from "../firebase";
 import { loginAction } from "../store/actions/authActions";
+import Loader from "./Loader";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -44,11 +45,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
   const classes = useStyles();
-
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { isAuth } = useSelector((state: IRootState) => state.auth);
+  const { isAuth, loading } = useSelector((state: IRootState) => state.auth);
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,8 +85,8 @@ const Login = () => {
 
   const passwordHandler = (e: any) => {
     setPassword(e.target.value);
-    if (e.target.value.length < 3 || e.target.value.length > 15) {
-      setPasswordError("Пароль должен быть длинее 3 и меньше 15");
+    if (e.target.value.length < 4 || e.target.value.length > 15) {
+      setPasswordError("Пароль должен быть длинее 4 и меньше 15");
       if (!e.target.value) {
         setPasswordError("Пароль не может быть пустым");
       }
@@ -110,13 +111,9 @@ const Login = () => {
 
   const singIn = (e: any) => {
     e.preventDefault();
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then(dispatch(loginAction))
-      .catch(err => {
-        console.log(err)
-      });
+    dispatch(loginAction(email, password));
   };
+
   const createUser = (e: any) => {
     e.preventDefault();
     auth.createUserWithEmailAndPassword(email, password);
@@ -125,23 +122,26 @@ const Login = () => {
   return (
     <Grid container className={classes.wrapper}>
       <Paper elevation={3} className={classes.formWrapper}>
+        {loading && <Loader />}
         <Typography className={classes.title} variant="h4">
           Вход
         </Typography>
-        <form className={classes.form} noValidate autoComplete="off">
+        <form className={classes.form} noValidate autoComplete="on">
           {emailDirty && emailError && (
             <span style={{ color: "red" }}>{emailError}</span>
           )}
           <TextField
             className={classes.input}
             name="email"
-            id="outlined-basic"
             label="Введите email"
             variant="outlined"
             size="small"
             value={email}
             onChange={emailHandler}
             onBlur={(e) => blurHandler(e)}
+            InputProps={{
+              type: "email",
+            }}
           />
           {passwordDirty && passwordError && (
             <span style={{ color: "red" }}>{passwordError}</span>
@@ -149,7 +149,6 @@ const Login = () => {
           <TextField
             className={classes.input}
             name="password"
-            id="outlined-basic"
             label="Введите пароль"
             variant="outlined"
             size="small"
@@ -158,6 +157,7 @@ const Login = () => {
             onBlur={(e) => blurHandler(e)}
             type={showPassword ? "text" : "password"}
             InputProps={{
+              type: "password",
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
@@ -182,7 +182,9 @@ const Login = () => {
           >
             Войти
           </Button>
-          <Button onClick={createUser}>Регистрация</Button>
+          <Button onClick={createUser} disabled={!formValid}>
+            Регистрация
+          </Button>
         </form>
       </Paper>
     </Grid>

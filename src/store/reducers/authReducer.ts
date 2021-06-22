@@ -12,8 +12,6 @@ interface UserAction {
     payload?: any;
 };
 
-// const SET_USER = 'SET_USER';
-
 const initialState: UserState = {
     userName: '',
     isAuth: false,
@@ -27,6 +25,9 @@ const authReducer = (state: UserState = initialState, action: UserAction) => {
             return { ...state, isAuth: true }
         case USER_ACTIONS.LOGOUT:
             return { ...state, isAuth: false }
+        case USER_ACTIONS.LOADING:
+            return { ...state, loading: action.payload }
+
         default:
             return state;
     }

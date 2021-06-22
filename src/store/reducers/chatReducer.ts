@@ -17,7 +17,7 @@ interface ChatAction {
 };
 
 const initialState: ChatState = {
-    messages: [{ text: "blabla", status: "SENDING", timestamp: 123456789 }],
+    messages: [],
 };
 
 const chatReducer = (state: ChatState = initialState, action: ChatAction) => {
