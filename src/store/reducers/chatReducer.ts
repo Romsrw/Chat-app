@@ -1,10 +1,12 @@
-import { MESSAGE_STATUSES } from './../constants/chatConstants';
 import { CHAT_ACTIONS } from "../constants/chatConstants";
 
 export interface IMessage {
+    uid: string;
+    displayName?: string;
+    photoURL?: string;
+    timestamp: string;
     text: string;
-    status: string;
-    timestamp: number;
+    status?: string;
 }
 
 export interface ChatState {
@@ -22,13 +24,21 @@ const initialState: ChatState = {
 
 const chatReducer = (state: ChatState = initialState, action: ChatAction) => {
     switch (action.type) {
+
         case CHAT_ACTIONS.ADD_MESSAGE:
             return {
                 ...state,
-                messages: [...state.messages, { text: action.payload, status: MESSAGE_STATUSES.SENDING, timestamp: Date.now() }]
+                messages: [...state.messages, action.payload]
             };
+
         case CHAT_ACTIONS.CHANGE_STATUS:
-            return { ...state, messages: state.messages.map((message: IMessage) => ({ ...message, status: action.payload })) }
+            return {
+                ...state, messages: state.messages
+                    .map((message: IMessage) => message.timestamp === action.payload.timestamp
+                        ? ({ ...message, status: action.payload.status })
+                        : message)
+            };
+
         default:
             return state;
     }

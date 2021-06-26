@@ -12,7 +12,6 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { IRootState } from "../store/store";
-import { useHistory } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { auth } from "../firebase";
 import { loginAction } from "../store/actions/authActions";
@@ -45,10 +44,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
   const classes = useStyles();
-  const history = useHistory();
   const dispatch = useDispatch();
 
-  const { isAuth, loading } = useSelector((state: IRootState) => state.auth);
+  const { loading } = useSelector((state: IRootState) => state.auth);
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -94,13 +92,6 @@ const Login = () => {
       setPasswordError("");
     }
   };
-
-  useEffect(() => {
-    if (isAuth) {
-      history.push("/chat");
-    }
-  }, [history, isAuth]);
-
   useEffect(() => {
     if (emailError || passwordError) {
       setFormValid(false);
@@ -126,7 +117,7 @@ const Login = () => {
         <Typography className={classes.title} variant="h4">
           Вход
         </Typography>
-        <form className={classes.form} noValidate autoComplete="on">
+        <form className={classes.form} noValidate>
           {emailDirty && emailError && (
             <span style={{ color: "red" }}>{emailError}</span>
           )}
@@ -136,6 +127,7 @@ const Login = () => {
             label="Введите email"
             variant="outlined"
             size="small"
+            autoComplete="email"
             value={email}
             onChange={emailHandler}
             onBlur={(e) => blurHandler(e)}
@@ -157,7 +149,7 @@ const Login = () => {
             onBlur={(e) => blurHandler(e)}
             type={showPassword ? "text" : "password"}
             InputProps={{
-              type: "password",
+              autoComplete: "current-password",
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
