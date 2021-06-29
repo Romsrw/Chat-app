@@ -1,7 +1,7 @@
 import { CHAT_ACTIONS } from "../constants/chatConstants";
 
 export interface IMessage {
-    uid: string;
+    uid?: string;
     displayName?: string;
     photoURL?: string;
     timestamp: string;
@@ -24,6 +24,11 @@ const initialState: ChatState = {
 
 const chatReducer = (state: ChatState = initialState, action: ChatAction) => {
     switch (action.type) {
+
+        case CHAT_ACTIONS.UPLOAD_MESSAGE:
+            return {
+                ...state, messages: action.payload
+            };
 
         case CHAT_ACTIONS.ADD_MESSAGE:
             return {

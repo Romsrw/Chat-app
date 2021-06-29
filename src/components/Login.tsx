@@ -8,6 +8,8 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  FormControlLabel,
+  Switch,
 } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -39,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
   loginBtn: {
     height: theme.spacing(5),
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -51,6 +54,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [checkedPassword, setCheckedPassword] = useState("");
   const [emailError, setEmailError] = useState("Email не может быть пустым");
   const [passwordError, setPasswordError] = useState(
     "Пароль не может быть пустым"
@@ -58,7 +62,12 @@ const Login = () => {
   const [emailDirty, setEmailDirty] = useState(false);
   const [passwordDirty, setPasswordDirty] = useState(false);
   const [formValid, setFormValid] = useState(false);
-
+  const [newUser, setNewUser] = useState(false);
+  
+  const handleChangeNewUser = (e: any) => {
+    setNewUser(e.target.checked);
+  };
+  
   const blurHandler = (e: any) => {
     switch (e.target.name) {
       case "email":
@@ -92,6 +101,11 @@ const Login = () => {
       setPasswordError("");
     }
   };
+
+  const checkPasswordHandler = (e: any) => {
+    setCheckedPassword(e.target.value);
+  };
+
   useEffect(() => {
     if (emailError || passwordError) {
       setFormValid(false);
@@ -115,11 +129,24 @@ const Login = () => {
       <Paper elevation={3} className={classes.formWrapper}>
         {loading && <Loader />}
         <Typography className={classes.title} variant="h4">
-          Вход
+          Вход /{" "}
+          <FormControlLabel
+            control={
+              <Switch
+                name="checkedB"
+                color="primary"
+                onChange={handleChangeNewUser}
+                checked={newUser}
+              />
+            }
+            label="Новый пользователь"
+          />
         </Typography>
         <form className={classes.form} noValidate>
           {emailDirty && emailError && (
-            <span style={{ color: "red" }}>{emailError}</span>
+            <span style={{ color: "red", marginBottom: "5px" }}>
+              {emailError}
+            </span>
           )}
           <TextField
             className={classes.input}
@@ -136,7 +163,9 @@ const Login = () => {
             }}
           />
           {passwordDirty && passwordError && (
-            <span style={{ color: "red" }}>{passwordError}</span>
+            <span style={{ color: "red", marginBottom: "5px" }}>
+              {passwordError}
+            </span>
           )}
           <TextField
             className={classes.input}
@@ -164,17 +193,57 @@ const Login = () => {
               ),
             }}
           />
+          {passwordDirty && passwordError && (
+            <span style={{ color: "red", marginBottom: "5px" }}>
+              {passwordError}
+            </span>
+          )}
+          {newUser ? (
+            <TextField
+              className={classes.input}
+              name="check_password"
+              label="Повторите пароль"
+              variant="outlined"
+              size="small"
+              value={checkedPassword}
+              onChange={checkPasswordHandler}
+              onBlur={(e) => blurHandler(e)}
+              type={showPassword ? "text" : "password"}
+              InputProps={{
+                autoComplete: "current-password",
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          ) : null}
           <Button
             className={classes.loginBtn}
             size="small"
             variant="contained"
             color="primary"
-            disabled={!formValid}
+            disabled={!formValid || newUser}
             onClick={singIn}
           >
             Войти
           </Button>
-          <Button onClick={createUser} disabled={!formValid}>
+          <Button
+            onClick={createUser}
+            className={classes.loginBtn}
+            disabled={!formValid || !newUser}
+            size="small"
+            variant="contained"
+            color="primary"
+          >
             Регистрация
           </Button>
         </form>

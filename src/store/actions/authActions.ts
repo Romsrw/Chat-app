@@ -8,6 +8,7 @@ export const loginAction = (email: string, password: string) => (dispatch: any) 
         .then((userCredential) => {
             if (userCredential.user) {
                 dispatch({ type: USER_ACTIONS.LOGIN })
+                console.log(userCredential.user)
             }
         })
         .catch(error => {

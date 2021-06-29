@@ -13,11 +13,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     display: "flex",
     flexDirection: "column",
-    flex: 1
+    flex: 1,
   },
   chat: {
     flex: 1,
     minWidth: theme.spacing(100),
+    overflowY: 'auto',
   },
   inputMessage: {
     margin: theme.spacing(2),
@@ -30,7 +31,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Chat = () => {
+
   const classes = useStyles();
+  
   const [textMessage, setTextMessage] = useState("");
 
   const handleChangeInput = (e: any) => {
