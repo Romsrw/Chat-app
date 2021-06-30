@@ -7,7 +7,10 @@ export const loginAction = (email: string, password: string) => (dispatch: any) 
         .signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             if (userCredential.user) {
+                const { uid, displayName, email } = userCredential.user;
                 dispatch({ type: USER_ACTIONS.LOGIN })
+                dispatch({ type: USER_ACTIONS.SET_USER_DATA, payload: { uid, displayName, email } })
+                // payload: { uid, displayName, email }
                 console.log(userCredential.user)
             }
         })
@@ -22,7 +25,7 @@ export const logoutAction = () => (dispatch: any) => {
     dispatch({ type: USER_ACTIONS.LOADING, payload: true })
     auth
         .signOut()
-        .then(() => { 
+        .then(() => {
             dispatch({ type: USER_ACTIONS.LOGOUT })
         })
         .catch((error) => {

@@ -1,6 +1,5 @@
 import Navbar from "./Navbar";
 import Message from "./Message";
-import Footer from "./Footer";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { sendMessage } from "../store/actions/chatActions";
@@ -9,19 +8,20 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   main: {
-    margin: theme.spacing(1),
     alignItems: "center",
     display: "flex",
     flexDirection: "column",
-    flex: 1,
+    height: "calc(100% - 48px)"
   },
   chat: {
-    flex: 1,
+    backgroundColor: "#c8dbe3",
+    margin: theme.spacing(2, 0),
     minWidth: theme.spacing(100),
-    overflowY: 'auto',
+    overflow: 'auto',
+    flex: 1,
   },
   inputMessage: {
-    margin: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     minWidth: 800,
     display: "flex",
     justifyContent: "flex-end",
@@ -83,7 +83,6 @@ const Chat = () => {
           </Button>
         </Box>
       </Box>
-      <Footer />
     </>
   );
 };

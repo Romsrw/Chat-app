@@ -104,6 +104,11 @@ const Login = () => {
 
   const checkPasswordHandler = (e: any) => {
     setCheckedPassword(e.target.value);
+    if(password !== checkedPassword) {
+      setPasswordError("Пароль не совпадает");
+    }else {
+      setPasswordError("");
+    };
   };
 
   useEffect(() => {
@@ -239,7 +244,7 @@ const Login = () => {
           <Button
             onClick={createUser}
             className={classes.loginBtn}
-            disabled={!formValid || !newUser}
+            disabled={(!formValid || !newUser) && (password !== checkedPassword)}
             size="small"
             variant="contained"
             color="primary"
