@@ -1,6 +1,24 @@
 import { USER_ACTIONS } from "../constants/authConstants";
 import { auth } from "../../firebase";
 
+export const signUpAction = (email: string, password: string) => (dispatch: any) => {
+    dispatch({ type: USER_ACTIONS.LOADING, payload: true });
+    auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+        if (userCredential.user) {
+            const { uid, displayName, email } = userCredential.user;
+            dispatch({ type: USER_ACTIONS.SET_USER_DATA, payload: { uid, displayName, email } })
+            dispatch({ type: USER_ACTIONS.LOGIN })
+            console.log(userCredential.user)
+        }
+    })
+    .catch(error => {
+        console.log(error)
+    }).finally(() => {
+        dispatch({ type: USER_ACTIONS.LOADING, payload: false })
+    })
+};
+
 export const loginAction = (email: string, password: string) => (dispatch: any) => {
     dispatch({ type: USER_ACTIONS.LOADING, payload: true })
     auth
@@ -8,9 +26,8 @@ export const loginAction = (email: string, password: string) => (dispatch: any) 
         .then((userCredential) => {
             if (userCredential.user) {
                 const { uid, displayName, email } = userCredential.user;
-                dispatch({ type: USER_ACTIONS.LOGIN })
                 dispatch({ type: USER_ACTIONS.SET_USER_DATA, payload: { uid, displayName, email } })
-                // payload: { uid, displayName, email }
+                dispatch({ type: USER_ACTIONS.LOGIN })
                 console.log(userCredential.user)
             }
         })

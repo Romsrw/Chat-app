@@ -41,7 +41,6 @@ const authReducer = (state: UserState = initialState, action: UserAction) => {
             return { ...state, loading: action.payload }
         case USER_ACTIONS.SET_USER_DATA:
             return { ...state, user: { ...state.user, ...action.payload } }
-        //{...state, user: {...state.user, ...action.payload }}
         default:
             return state;
     }

@@ -1,23 +1,47 @@
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../store/actions/authActions";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Grid,
+  Menu,
+  MenuItem,
+} from "@material-ui/core";
+import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined";
+import MeetingRoomOutlinedIcon from "@material-ui/icons/MeetingRoomOutlined";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
-  btn: {
-    margin: theme.spacing(1),
+  MenuBtn: {
+    margin: theme.spacing(1, 30, 1, 0),
   },
 }));
 
 const Navbar = () => {
   const classes = useStyles();
 
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const history = useHistory();
+
+  const handleClick = (e: any) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleProfile = () => {
+    history.push("/profile");
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const dispatch = useDispatch();
 
-  const handleClick = () => {
+  const handleClickLogOut = () => {
     dispatch(logoutAction());
   };
 
@@ -27,14 +51,31 @@ const Navbar = () => {
         <Toolbar variant="dense">
           <Grid container justify={"flex-end"}>
             <Button
-              className={classes.btn}
-              size="small"
-              variant="contained"
-              color="secondary"
+              aria-controls="simple-menu"
+              aria-haspopup="true"
               onClick={handleClick}
+              variant="outlined"
+              color="inherit"
+              className={classes.MenuBtn}
             >
-              Выйти
+              Open Menu
             </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleProfile}>
+                <PersonOutlineOutlinedIcon fontSize="small" />
+                Профиль
+              </MenuItem>
+              <MenuItem onClick={handleClickLogOut}>
+                <MeetingRoomOutlinedIcon />
+                Выйти
+              </MenuItem>
+            </Menu>
           </Grid>
         </Toolbar>
       </AppBar>

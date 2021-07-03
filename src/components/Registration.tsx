@@ -1,9 +1,4 @@
 import Loader from "./Loader";
-import { IRootState } from "../store/store";
-import { loginAction } from "../store/actions/authActions";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -12,9 +7,14 @@ import {
   Paper,
   Typography,
   InputAdornment,
-  IconButton,
+  IconButton
 } from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { IRootState } from "../store/store";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { signUpAction } from "../store/actions/authActions";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Login = () => {
+const Registration = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -56,6 +56,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [checkedPassword, setCheckedPassword] = useState("");
   const [emailError, setEmailError] = useState("Email не может быть пустым");
   const [passwordError, setPasswordError] = useState(
     "Пароль не может быть пустым"
@@ -63,7 +64,7 @@ const Login = () => {
   const [emailDirty, setEmailDirty] = useState(false);
   const [passwordDirty, setPasswordDirty] = useState(false);
   const [formValid, setFormValid] = useState(false);
-
+  
   const blurHandler = (e: any) => {
     switch (e.target.name) {
       case "email":
@@ -98,17 +99,27 @@ const Login = () => {
     }
   };
 
+  const checkPasswordHandler = (e: any) => {
+    setCheckedPassword(e.target.value);
+  };
+
   useEffect(() => {
+    if(password !== checkedPassword) {
+        setPasswordError("Пароль не совпадает");
+      }else {
+        setPasswordError("");
+      };
     if (emailError || passwordError) {
       setFormValid(false);
     } else {
       setFormValid(true);
     }
-  }, [emailError, passwordError]);
+  }, [emailError, passwordError, password, checkedPassword]);
 
-  const signIn = (e: any) => {
+
+  const createUser = (e: any) => {
     e.preventDefault();
-    dispatch(loginAction(email, password));
+    dispatch(signUpAction(email, password));
   };
 
   return (
@@ -116,7 +127,7 @@ const Login = () => {
       <Paper elevation={3} className={classes.formWrapper}>
         {loading && <Loader />}
         <Typography className={classes.title} variant="h4">
-          Вход
+          Регистрация
         </Typography>
         <form className={classes.form} noValidate>
           {emailDirty && emailError && (
@@ -169,23 +180,55 @@ const Login = () => {
               ),
             }}
           />
+          {passwordDirty && passwordError && (
+            <span style={{ color: "red", marginBottom: "5px" }}>
+              {passwordError}
+            </span>
+          )}
+          
+            <TextField
+              className={classes.input}
+              name="check_password"
+              label="Повторите пароль"
+              variant="outlined"
+              size="small"
+              value={checkedPassword}
+              onChange={checkPasswordHandler}
+              onBlur={(e) => blurHandler(e)}
+              type={showPassword ? "text" : "password"}
+              InputProps={{
+                autoComplete: "current-password",
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
           <Button
+            onClick={createUser}
             className={classes.loginBtn}
+            disabled={!formValid }
             size="small"
             variant="contained"
             color="primary"
-            disabled={!formValid}
-            onClick={signIn}
           >
-            Войти
+            Регистрация
           </Button>
         </form>
         <Typography>
-          Нет аккаунта? <Link  className={classes.LinkReg} to="/registration">Перейти к регистрации</Link>
+          Есть аккаунт? <Link  className={classes.LinkReg} to="/login">Войти</Link>
         </Typography>
       </Paper>
     </Grid>
   );
 };
 
-export default Login;
+export default Registration;
