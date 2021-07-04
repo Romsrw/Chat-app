@@ -1,5 +1,6 @@
 import { USER_ACTIONS } from "../constants/authConstants";
 import { auth } from "../../firebase";
+import { IUser } from "../reducers/authReducer";
 
 export const signUpAction = (email: string, password: string) => (dispatch: any) => {
     dispatch({ type: USER_ACTIONS.LOADING, payload: true });
@@ -50,4 +51,9 @@ export const logoutAction = () => (dispatch: any) => {
         }).finally(() => {
             dispatch({ type: USER_ACTIONS.LOADING, payload: false })
         });
+};
+
+export const setUserDataAction = (userData: IUser) => (dispatch: any) => {
+    const {uid, displayName, email} = userData;
+    dispatch({ type: USER_ACTIONS.SET_USER_DATA, payload: { uid, displayName, email } })
 };

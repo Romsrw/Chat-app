@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 const Profile = () => {
   const classes = useStyles();
   const { user } = useSelector((state: IRootState) => state.auth);
+
   return (
     <>
       <Navbar />

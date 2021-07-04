@@ -215,7 +215,7 @@ const Registration = () => {
           <Button
             onClick={createUser}
             className={classes.loginBtn}
-            disabled={!formValid }
+            disabled={!formValid || !password.trim()}
             size="small"
             variant="contained"
             color="primary"

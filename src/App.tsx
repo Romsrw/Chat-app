@@ -2,9 +2,9 @@ import "./App.css";
 import AppRouter from "./AppRouter";
 import Chat from "./components/Chat";
 import Login from "./components/Login";
-import { Route, Switch, Redirect } from "react-router-dom";
 import Registration from "./components/Registration";
 import Profile from "./components/Profile";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 const App = () => {
   return (

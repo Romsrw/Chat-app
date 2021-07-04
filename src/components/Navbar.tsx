@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../store/actions/authActions";
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,8 +13,6 @@ import {
 } from "@material-ui/core";
 import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined";
 import MeetingRoomOutlinedIcon from "@material-ui/icons/MeetingRoomOutlined";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   MenuBtn: {

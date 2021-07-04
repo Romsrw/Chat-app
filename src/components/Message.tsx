@@ -24,9 +24,6 @@ const useStyles = makeStyles((theme) => ({
     wordWrap: "break-word",
     marginLeft: "auto",
     borderRadius: theme.spacing(4),
-    '&:hover': {
-
-    }
   },
 }));
 
